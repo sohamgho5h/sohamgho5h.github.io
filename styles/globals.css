@@ -1,21 +1,411 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Google Fonts - Nunito */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400,600,700&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #FFF7E6;
+  color: #1A1A1A;
+  line-height: 1.6;
+  font-weight: 400;
 }
+
+/* Animation Keyframes */
+@keyframes fadeUpIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes backOutDown {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(0px) scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(1000px) scale(0.7);
+    opacity: 0;
+  }
+}
+
+/* Container and general styles */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Profile Section */
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+}
+
+.profile-image {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.profile-name {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .profile-section {
+    top: 1rem;
+    left: 1rem;
+    gap: 1rem;
+  }
+
+  .profile-image {
+    width: 77px;
+    height: 77px;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+}
+
+/* Hero Section */
+.hero {
+  height: 500px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding-top: 120px;
+}
+
+.hero > div {
+  width: 100%;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 600px) {
+  .profile-section {
+    top: 1rem;
+    left: 1rem;
+    gap: 1rem;
+  }
+
+  .profile-image {
+    width: 77px;
+    height: 77px;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+
+  .hero p {
+    margin-top: 1.5rem;  /* Half of desktop's 3rem */
+  }
+}
+
+/* Company Logos */
+.company-logos {
+  text-align: center;
+}
+
+.company-logos p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  justify-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.logo-grid img {
+  max-width: 120px;
+  height: auto;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.logo-grid img:hover {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .logo-grid {
+    gap: 0.5rem;
+  }
+  
+  .logo-grid img {
+    max-width: 100px;
+  }
+}
+
+/* Projects Section */
+.projects {
+  margin-top: 2rem; /* Specific gap between logos and Featured Work */
+}
+
+.projects-heading {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+.projects-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.project-card {
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+  border: none;
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity, box-shadow;
+  outline: none;
+  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.project-card:focus {
+  outline: none;
+}
+
+.project-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove focus styles for mouse users */
+.project-card:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Override any browser default focus styles */
+button.project-card {
+  outline: none !important;
+}
+
+/* Animation states */
+.project-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-out, 
+              transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1.5); /* Bounce on load */
+}
+
+.project-card.visible:hover {
+  transform: scale(1.05);
+  transition: transform 300ms cubic-bezier(0.2, 1.5, 0.3, 1.2); /* Bounce on hover */
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .project-card.visible {
+    transform: none;
+  }
+
+  .project-card.visible:hover {
+    transform: none;
+  }
+}
+
+/* Contact Section */
+.contact {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  list-style: none;
+  margin-top: 2rem;
+}
+
+.social-links a {
+  color: #1A1A1A;
+  transition: opacity 0.2s ease;
+}
+
+.social-links a:hover {
+  opacity: 0.7;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 1000;
+  visibility: hidden;
+  transition: background-color 200ms ease-in-out;
+  pointer-events: none;
+}
+
+.modal-overlay.active {
+  background-color: rgba(0, 0, 0, 0.6);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-card {
+  position: fixed;
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  z-index: 1001;
+  will-change: transform, border-radius;
+  transform-origin: 0 0;
+  transition: transform 200ms ease-in-out,
+              top 200ms ease-in-out,
+              left 200ms ease-in-out,
+              width 200ms ease-in-out,
+              height 200ms ease-in-out,
+              border-radius 200ms ease-in-out;
+  height: auto;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-inner {
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+  transition-delay: 100ms;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.modal-inner.visible {
+  opacity: 1;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+  transition-delay: 100ms;
+}
+
+.modal-close.visible {
+  opacity: 1;
+}
+
+/* Lock body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Focus styles for accessibility */
+a:focus,
+button:focus {
+  outline: 3px solid #1A1A1A;
+  outline-offset: 2px;
+}
+
+@media (max-height: 700px) {
+  .hero {
+    min-height: 400px;
+    padding: 100px 0 30px;
+  }
+
+  .profile-section {
+    top: 1.5rem;
+  }
+
+  .company-logos {
+    margin-top: 1rem;
+  }
+} 
