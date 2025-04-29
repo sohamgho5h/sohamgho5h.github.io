@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { LinkedInIcon, GitHubIcon, XIcon } from '../components/icons/SocialIcons';
 import Modal from '../components/Modal';
@@ -12,12 +12,67 @@ export default function Home() {
   const [isClosing, setIsClosing] = useState(false);
   const [lastFocusedElement, setLastFocusedElement] = useState(null);
   const projectRefs = useRef([]);
+  const logoRefs = useRef([]);
   const observerRef = useRef(null);
   const modalCardRef = useRef(null);
   const clickedCardRef = useRef(null);
 
-  // Initialize project animations
-  useProjectAnimation(projectRefs, observerRef);
+  // Initialize project and logo animations
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    // Handle initial visibility
+    if (prefersReducedMotion) {
+      [...projectRefs.current, ...logoRefs.current].forEach(el => {
+        if (el) el.classList.add('visible');
+      });
+      return;
+    }
+
+    // Initial animation with quick stagger
+    const allElements = [...logoRefs.current, ...projectRefs.current];
+    allElements.forEach((el, index) => {
+      if (el) {
+        const delay = index === 0 ? INITIAL_DELAY : STAGGER_DELAY * index;
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            el.classList.add('visible');
+          });
+        }, delay);
+      }
+    });
+
+    // Scroll animation observer
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, index) => {
+          if (entry.isIntersecting && !entry.target.classList.contains('visible')) {
+            setTimeout(() => {
+              requestAnimationFrame(() => {
+                entry.target.classList.add('visible');
+              });
+            }, STAGGER_DELAY * index);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '50px',
+      }
+    );
+
+    allElements.forEach((el) => {
+      if (el) {
+        observerRef.current.observe(el);
+      }
+    });
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
 
   // Pre-generate random colors for consistency
   const projectColors = Array(6).fill().map(() => getRandomPastelColor());
@@ -112,8 +167,12 @@ export default function Home() {
             <div className="company-logos">
               <p>with learnings from</p>
               <div className="logo-grid">
-                {companies.map((company) => (
-                  <div key={company.name} style={{ position: 'relative', width: '120px', height: '60px' }}>
+                {companies.map((company, index) => (
+                  <div 
+                    key={company.name} 
+                    ref={(el) => (logoRefs.current[index] = el)}
+                    style={{ position: 'relative', width: '120px', height: '60px' }}
+                  >
                     <Image
                       src={company.logo}
                       alt={company.name}

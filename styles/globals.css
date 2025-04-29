@@ -1,6 +1,12 @@
 /* Google Fonts - Nunito */
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400,600,700&display=swap');
 
+/* Import other CSS files */
+@import './animations/keyframes.css';
+@import './utils/variables.css';
+@import './layout/container.css';
+@import './components/project-card.css';
+
 /* Reset and base styles */
 * {
   box-sizing: border-box;
@@ -13,10 +19,9 @@ html {
 }
 
 body {
-  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #FFF7E6;
-  color: #1A1A1A;
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-text);
   line-height: 1.6;
   font-weight: 400;
 }
@@ -59,10 +64,10 @@ body {
 .profile-section {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--spacing-md);
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: var(--spacing-lg);
+  left: var(--spacing-lg);
 }
 
 .profile-image {
@@ -72,28 +77,15 @@ body {
   overflow: hidden;
   position: relative;
   border: 3px solid rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  animation: fadeUpIn var(--transition-normal) ease-out forwards;
 }
 
 .profile-name {
   font-size: 2.5rem;
   font-weight: 700;
-}
-
-@media (max-width: 600px) {
-  .profile-section {
-    top: 1rem;
-    left: 1rem;
-    gap: 1rem;
-  }
-
-  .profile-image {
-    width: 77px;
-    height: 77px;
-  }
-
-  .profile-name {
-    font-size: 1.75rem;
-  }
+  opacity: 0;
+  animation: fadeUpIn var(--transition-normal) ease-out 0.04s forwards;
 }
 
 /* Hero Section */
@@ -113,35 +105,15 @@ body {
 
 .hero h1 {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-sm);
 }
 
 .hero p {
   font-size: 1.25rem;
-  opacity: 0.9;
-  margin-bottom: 1.5rem;
+  opacity: 0;
+  margin-bottom: var(--spacing-md);
   margin-top: 3rem;
-}
-
-@media (max-width: 600px) {
-  .profile-section {
-    top: 1rem;
-    left: 1rem;
-    gap: 1rem;
-  }
-
-  .profile-image {
-    width: 77px;
-    height: 77px;
-  }
-
-  .profile-name {
-    font-size: 1.75rem;
-  }
-
-  .hero p {
-    margin-top: 1.5rem;  /* Half of desktop's 3rem */
-  }
+  animation: fadeUpIn var(--transition-normal) ease-out 0.08s forwards;
 }
 
 /* Company Logos */
@@ -150,54 +122,66 @@ body {
 }
 
 .company-logos p {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.8;
+  margin-bottom: var(--spacing-md);
   font-style: italic;
+  opacity: 0;
+  animation: fadeUpIn var(--transition-normal) ease-out 0.12s forwards;
 }
 
 .logo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
+  gap: var(--spacing-xs);
   align-items: center;
   justify-items: center;
   max-width: 600px;
   margin: 0 auto;
 }
 
+.logo-grid > div {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+}
+
+.logo-grid > div.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--transition-normal) ease-out, 
+              transform var(--transition-slow) cubic-bezier(0.25, 0.1, 0.25, 1.5);
+}
+
+.logo-grid > div.visible:hover {
+  transform: scale(1.1);
+  transition: transform var(--transition-normal) cubic-bezier(0.2, 1.5, 0.3, 1.2);
+}
+
 .logo-grid img {
   max-width: 120px;
   height: auto;
   opacity: 0.8;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-fast) ease;
 }
 
 .logo-grid img:hover {
   opacity: 1;
 }
 
-@media (max-width: 600px) {
-  .logo-grid {
-    gap: 0.5rem;
-  }
-  
-  .logo-grid img {
-    max-width: 100px;
-  }
-}
-
 /* Projects Section */
 .projects {
-  margin-top: 2rem; /* Specific gap between logos and Featured Work */
+  margin-top: var(--spacing-lg);
 }
 
 .projects-heading {
   text-align: center;
   font-size: 1.25rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.9;
+  margin-bottom: var(--spacing-md);
   font-weight: 400;
+  opacity: 0;
+  animation: fadeUpIn var(--transition-normal) ease-out 0.16s forwards;
 }
 
 .projects-grid {
@@ -206,104 +190,23 @@ body {
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 600px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .projects-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.project-card {
-  border-radius: 24px;
-  padding: 2rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1.25rem;
-  border: none;
-  opacity: 0;
-  transform: translateY(20px);
-  will-change: transform, opacity, box-shadow;
-  outline: none;
-  font-family: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.project-card:focus {
-  outline: none;
-}
-
-.project-card:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-/* Remove focus styles for mouse users */
-.project-card:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* Override any browser default focus styles */
-button.project-card {
-  outline: none !important;
-}
-
-/* Animation states */
-.project-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 300ms ease-out, 
-              transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1.5); /* Bounce on load */
-}
-
-.project-card.visible:hover {
-  transform: scale(1.05);
-  transition: transform 300ms cubic-bezier(0.2, 1.5, 0.3, 1.2); /* Bounce on hover */
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .project-card {
-    opacity: 1;
-    transform: none;
-  }
-
-  .project-card.visible {
-    transform: none;
-  }
-
-  .project-card.visible:hover {
-    transform: none;
-  }
-}
-
 /* Contact Section */
 .contact {
-  padding: 4rem 0;
+  padding: var(--spacing-xl) 0;
   text-align: center;
 }
 
 .social-links {
   display: flex;
-  gap: 2rem;
+  gap: var(--spacing-lg);
   justify-content: center;
   list-style: none;
-  margin-top: 2rem;
+  margin-top: var(--spacing-lg);
 }
 
 .social-links a {
-  color: #1A1A1A;
-  transition: opacity 0.2s ease;
+  color: var(--color-text);
+  transition: opacity var(--transition-fast) ease;
 }
 
 .social-links a:hover {
@@ -318,14 +221,14 @@ button.project-card {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0);
-  z-index: 1000;
+  z-index: var(--z-index-modal-overlay);
   visibility: hidden;
-  transition: background-color 200ms ease-in-out;
+  transition: background-color var(--transition-fast) ease-in-out;
   pointer-events: none;
 }
 
 .modal-overlay.active {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--color-modal-overlay);
   visibility: visible;
   pointer-events: auto;
 }
@@ -333,17 +236,17 @@ button.project-card {
 .modal-card {
   position: fixed;
   background: white;
-  border-radius: 20px;
-  padding: 2rem;
-  z-index: 1001;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-lg);
+  z-index: var(--z-index-modal);
   will-change: transform, border-radius;
   transform-origin: 0 0;
-  transition: transform 200ms ease-in-out,
-              top 200ms ease-in-out,
-              left 200ms ease-in-out,
-              width 200ms ease-in-out,
-              height 200ms ease-in-out,
-              border-radius 200ms ease-in-out;
+  transition: transform var(--transition-fast) ease-in-out,
+              top var(--transition-fast) ease-in-out,
+              left var(--transition-fast) ease-in-out,
+              width var(--transition-fast) ease-in-out,
+              height var(--transition-fast) ease-in-out,
+              border-radius var(--transition-fast) ease-in-out;
   height: auto;
   max-height: calc(100vh - 40px);
   overflow-y: auto;
@@ -353,8 +256,8 @@ button.project-card {
 
 .modal-inner {
   opacity: 0;
-  transition: opacity 100ms ease-in-out;
-  transition-delay: 100ms;
+  transition: opacity var(--transition-fast) ease-in-out;
+  transition-delay: 0ms;
   flex: 1;
   overflow-y: auto;
   padding-right: 10px;
@@ -366,33 +269,99 @@ button.project-card {
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--spacing-xs);
   line-height: 1;
   opacity: 0;
-  transition: opacity 100ms ease-in-out;
-  transition-delay: 100ms;
+  transition: opacity var(--transition-fast) ease-in-out;
+  transition-delay: 0ms;
 }
 
 .modal-close.visible {
   opacity: 1;
 }
 
-/* Lock body scroll when modal is open */
-body.modal-open {
-  overflow: hidden;
+/* Responsive Design */
+@media (max-width: var(--breakpoint-mobile)) {
+  .profile-section {
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    gap: var(--spacing-sm);
+  }
+
+  .profile-image {
+    width: 77px;
+    height: 77px;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+
+  .hero p {
+    margin-top: var(--spacing-md);
+  }
+
+  .logo-grid {
+    gap: var(--spacing-xs);
+  }
+  
+  .logo-grid img {
+    max-width: 100px;
+  }
+}
+
+@media (min-width: 600px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .logo-grid > div,
+  .project-card,
+  .profile-image,
+  .profile-name,
+  .hero p,
+  .company-logos p,
+  .projects-heading {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .logo-grid > div.visible,
+  .project-card.visible {
+    transform: none;
+  }
+
+  .project-card.visible:hover {
+    transform: none;
+  }
 }
 
 /* Focus styles for accessibility */
 a:focus,
 button:focus {
-  outline: 3px solid #1A1A1A;
+  outline: 3px solid var(--color-text);
   outline-offset: 2px;
+}
+
+/* Lock body scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
 }
 
 @media (max-height: 700px) {
@@ -402,10 +371,10 @@ button:focus {
   }
 
   .profile-section {
-    top: 1.5rem;
+    top: var(--spacing-md);
   }
 
   .company-logos {
-    margin-top: 1rem;
+    margin-top: var(--spacing-sm);
   }
 } 
