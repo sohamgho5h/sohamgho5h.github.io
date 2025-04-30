@@ -1,0 +1,19 @@
+{
+  "id": "data-visualization",
+  "order": 3,
+  "title": "Interactive Data Visualization Dashboard",
+  "shortDescription": "A real-time dashboard for visualizing complex datasets using D3.js and React, featuring interactive charts and filters",
+  "tags": ["D3.js", "React", "TypeScript", "Node.js", "MongoDB"],
+  "thumbnailImage": "/images/projects/dashboard-thumb.jpg",
+  "featured": false,
+  "markdownContent": "# Interactive Data Visualization Dashboard\n\nA sophisticated data visualization platform that transforms complex datasets into interactive, insightful visualizations.\n\n## Features\n\n### Interactive Visualizations\n- Real-time data updates\n- Multiple chart types (line, bar, scatter, heatmap)\n- Custom animations for data transitions\n- Zoom and pan capabilities\n\n### Data Processing\n- Real-time data streaming\n- Custom data aggregation pipelines\n- Efficient data caching\n- CSV/JSON import support\n\n### User Experience\n- Intuitive filtering interface\n- Customizable color schemes\n- Responsive design\n- Export capabilities\n\n## Technical Stack\n\n### Frontend\n- React with TypeScript\n- D3.js for visualizations\n- Redux for state management\n- Styled-components for styling\n\n### Backend\n- Node.js Express server\n- MongoDB for data storage\n- WebSocket for real-time updates\n- Redis for caching\n\n## Challenges & Solutions\n\n1. **Performance Optimization**\n   - Implemented virtual scrolling\n   - Used WebGL for large datasets\n   - Optimized D3 render cycles\n\n2. **Real-time Updates**\n   - Efficient WebSocket implementation\n   - Smart data diffing\n   - Batch updates for better performance",
+  "links": {
+    "github": "https://github.com/username/data-viz",
+    "demo": "https://data-viz-demo.com"
+  },
+  "metadata": {
+    "date": "2024-01",
+    "status": "completed",
+    "role": "Frontend Developer"
+  }
+} 

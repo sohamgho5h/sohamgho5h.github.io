@@ -2,26 +2,51 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { LinkedInIcon, GitHubIcon, XIcon } from '../components/icons/SocialIcons';
 import Modal from '../components/Modal';
-import useProjectAnimation from '../components/ProjectAnimation';
+import ProjectCard from '../components/ProjectCard';
+import { getAllProjects } from '../utils/projects';
+import type { Project } from '../types/project';
 import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LINKS } from '../config/constants';
-import { getRandomPastelColor, calculateModalDimensions } from '../utils/helpers';
+import { getRandomPastelColor } from '../utils/helpers';
+import { GetStaticProps } from 'next';
 
-export default function Home() {
+interface HomeProps {
+  initialProjects: Project[];
+}
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  try {
+    const projects = await getAllProjects();
+    return {
+      props: {
+        initialProjects: projects,
+      },
+    };
+  } catch (error) {
+    console.error('Error loading projects in getStaticProps:', error);
+    return {
+      props: {
+        initialProjects: [],
+      },
+    };
+  }
+};
+
+export default function Home({ initialProjects }: HomeProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | undefined>();
   const [modalContent, setModalContent] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [lastFocusedElement, setLastFocusedElement] = useState(null);
-  const projectRefs = useRef([]);
-  const logoRefs = useRef([]);
-  const observerRef = useRef(null);
-  const modalCardRef = useRef(null);
-  const clickedCardRef = useRef(null);
+  const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null);
+  const [projects] = useState<Project[]>(initialProjects);
+  const projectRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const logoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const modalCardRef = useRef<HTMLDivElement>(null);
 
   // Initialize project and logo animations
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     
-    // Handle initial visibility
     if (prefersReducedMotion) {
       [...projectRefs.current, ...logoRefs.current].forEach(el => {
         if (el) el.classList.add('visible');
@@ -29,7 +54,6 @@ export default function Home() {
       return;
     }
 
-    // Initial animation with quick stagger
     const allElements = [...logoRefs.current, ...projectRefs.current];
     allElements.forEach((el, index) => {
       if (el) {
@@ -42,7 +66,6 @@ export default function Home() {
       }
     });
 
-    // Scroll animation observer
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry, index) => {
@@ -63,86 +86,55 @@ export default function Home() {
 
     allElements.forEach((el) => {
       if (el) {
-        observerRef.current.observe(el);
+        observerRef.current?.observe(el);
       }
     });
 
     return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+      observerRef.current?.disconnect();
     };
-  }, []);
+  }, [projects]);
 
-  // Pre-generate random colors for consistency
-  const projectColors = Array(6).fill().map(() => getRandomPastelColor());
+  const openModal = (project: Project, event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isClosing) return;
+    
+    // Set project first
+    setSelectedProject(project);
+    
+    // Use requestAnimationFrame to ensure DOM updates
+    requestAnimationFrame(() => {
+      setModalOpen(true);
+      // Delay setting content visible
+      setTimeout(() => {
+        setModalContent(true);
+      }, 100);
+    });
+    
+    setLastFocusedElement(event.currentTarget);
+  };
 
   const closeModal = () => {
-    if (!modalCardRef.current || !clickedCardRef.current || isClosing) return;
-    
+    if (isClosing) return;
     setIsClosing(true);
     setModalContent(false);
     
-    const cardRect = clickedCardRef.current.getBoundingClientRect();
-
-    // Animate back to the card's position and size
-    requestAnimationFrame(() => {
-      if (modalCardRef.current) {
-        modalCardRef.current.style.width = `${cardRect.width}px`;
-        modalCardRef.current.style.height = `${cardRect.height}px`;
-        modalCardRef.current.style.left = `${cardRect.left}px`;
-        modalCardRef.current.style.top = `${cardRect.top}px`;
-      }
-    });
-
-    // After animation completes
     setTimeout(() => {
       setModalOpen(false);
       setIsClosing(false);
+      setSelectedProject(undefined);
       if (lastFocusedElement) {
         lastFocusedElement.focus();
       }
-      // Reset modal card styles
-      if (modalCardRef.current) {
-        modalCardRef.current.style.transform = '';
-      }
-    }, ANIMATION_DURATION);
+    }, 300);
   };
 
-  const openModal = (e) => {
-    if (isClosing) return;
-    const card = e.currentTarget;
-    clickedCardRef.current = card;
-    setLastFocusedElement(card);
+  // Pre-generate random colors for consistency
+  const projectColors = Array(projects.length).fill(null).map(() => getRandomPastelColor());
 
-    // Get the clicked card's position and size
-    const cardRect = card.getBoundingClientRect();
-    const { width, maxHeight, left, top } = calculateModalDimensions(window);
-    
-    // Set initial position and size
-    if (modalCardRef.current) {
-      modalCardRef.current.style.width = `${cardRect.width}px`;
-      modalCardRef.current.style.height = `${cardRect.height}px`;
-      modalCardRef.current.style.left = `${cardRect.left}px`;
-      modalCardRef.current.style.top = `${cardRect.top}px`;
-      modalCardRef.current.style.background = card.style.backgroundColor;
-
-      // Trigger the animation in the next frame
-      requestAnimationFrame(() => {
-        modalCardRef.current.style.width = `${width}px`;
-        modalCardRef.current.style.height = 'auto';
-        modalCardRef.current.style.maxHeight = `${maxHeight}px`;
-        modalCardRef.current.style.left = `${left}px`;
-        modalCardRef.current.style.top = `${top}px`;
-      });
-    }
-
-    setModalOpen(true);
-
-    // Show content after animation
-    setTimeout(() => {
-      setModalContent(true);
-    }, ANIMATION_DURATION);
+  const handleProjectClick = (project: Project) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    openModal(project, event);
   };
 
   return (
@@ -170,7 +162,9 @@ export default function Home() {
                 {companies.map((company, index) => (
                   <div 
                     key={company.name} 
-                    ref={(el) => (logoRefs.current[index] = el)}
+                    ref={el => {
+                      logoRefs.current[index] = el;
+                    }}
                     style={{ position: 'relative', width: '120px', height: '60px' }}
                   >
                     <Image
@@ -191,17 +185,16 @@ export default function Home() {
         <section className="projects">
           <h2 className="projects-heading">Featured work</h2>
           <div className="projects-grid">
-            {[1, 2, 3, 4, 5, 6].map((num, index) => (
-              <button
-                key={num}
-                className="project-card"
-                onClick={openModal}
-                style={{ backgroundColor: projectColors[index] }}
-                aria-haspopup="dialog"
-                ref={(el) => (projectRefs.current[index] = el)}
-              >
-                Project {num}
-              </button>
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                ref={el => {
+                  projectRefs.current[index] = el;
+                }}
+                project={project}
+                onClick={handleProjectClick(project)}
+                backgroundColor={projectColors[index]}
+              />
             ))}
           </div>
         </section>
@@ -227,25 +220,17 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Modal */}
-      <Modal
-        isOpen={modalOpen}
-        onClose={closeModal}
-        modalRef={modalCardRef}
-        contentVisible={modalContent}
-        isClosing={isClosing}
-      >
-        <h1>Sample Project Title</h1>
-        <p>This is some <strong>Markdown</strong> content:</p>
-        <ul>
-          <li>bullet one</li>
-          <li>bullet two</li>
-          <li>bullet three</li>
-        </ul>
-        <blockquote>
-          "Autonomous agents are transforming customer service."
-        </blockquote>
-      </Modal>
+      {selectedProject && (
+        <Modal
+          key={selectedProject.id}
+          isOpen={modalOpen}
+          onClose={closeModal}
+          project={selectedProject}
+          modalRef={modalCardRef}
+          contentVisible={modalContent}
+          isClosing={isClosing}
+        />
+      )}
     </>
   );
-}
+} 
