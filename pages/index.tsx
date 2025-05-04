@@ -189,7 +189,7 @@ export default function Home({ initialProjects }: HomeProps) {
                   <FaLinkedin className="cta-icon" /> Connect
                 </a>
                 <a
-                  href="mailto:sohamghosh@email.com"
+                  href="mailto:sohamizhere@email.com"
                   className="cta-btn"
                   ref={el => { ctaRefs.current[1] = el; }}
                 >

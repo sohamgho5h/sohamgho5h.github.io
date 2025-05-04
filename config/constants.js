@@ -17,7 +17,7 @@ export const INITIAL_DELAY = 10;
 export const SOCIAL_LINKS = [
   {
     name: 'LinkedIn',
-    url: 'https://linkedin.com',
+    url: 'https://linkedin.com/in/sohamgho5h',
     Icon: FaLinkedin
   },
   {
@@ -27,7 +27,7 @@ export const SOCIAL_LINKS = [
   },
   {
     name: 'X',
-    url: 'https://x.com',
+    url: 'https://x.com/sohamgho5h',
     Icon: FaXTwitter
   }
 ]; 

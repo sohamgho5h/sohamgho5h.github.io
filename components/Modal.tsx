@@ -108,7 +108,7 @@ export default function Modal({
                 {project.markdownContent}
               </ReactMarkdown>
             ) : (
-              <p>No content available</p>
+              <p>¯\_(ツ)_/¯</p>
             )}
           </div>
         </div>
