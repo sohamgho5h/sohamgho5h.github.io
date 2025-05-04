@@ -9,6 +9,7 @@ interface ModalProps {
   modalRef: React.RefObject<HTMLDivElement>;
   contentVisible: boolean;
   isClosing: boolean;
+  backgroundColor?: string;
 }
 
 export default function Modal({ 
@@ -17,7 +18,8 @@ export default function Modal({
   project,
   modalRef, 
   contentVisible, 
-  isClosing 
+  isClosing,
+  backgroundColor
 }: ModalProps) {
   const [isContentMounted, setIsContentMounted] = useState(false);
 
@@ -68,6 +70,7 @@ export default function Modal({
       <div
         ref={modalRef}
         className="modal-card"
+        style={backgroundColor ? { background: backgroundColor } : undefined}
       >
         <button
           className="modal-close"

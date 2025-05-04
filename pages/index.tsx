@@ -40,6 +40,7 @@ export default function Home({ initialProjects }: HomeProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null);
   const [projects] = useState<Project[]>(initialProjects);
+  const [selectedProjectColor, setSelectedProjectColor] = useState<string | undefined>(undefined);
   const projectRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const logoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const ctaRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -98,21 +99,16 @@ export default function Home({ initialProjects }: HomeProps) {
     };
   }, [projects]);
 
-  const openModal = (project: Project, event: React.MouseEvent<HTMLButtonElement>) => {
+  const openModal = (project: Project, event: React.MouseEvent<HTMLButtonElement>, color: string) => {
     if (isClosing) return;
-    
-    // Set project first
     setSelectedProject(project);
-    
-    // Use requestAnimationFrame to ensure DOM updates
+    setSelectedProjectColor(color);
     requestAnimationFrame(() => {
       setModalOpen(true);
-      // Delay setting content visible
       setTimeout(() => {
         setModalContent(true);
       }, 100);
     });
-    
     setLastFocusedElement(event.currentTarget);
   };
 
@@ -134,10 +130,10 @@ export default function Home({ initialProjects }: HomeProps) {
   // Pre-generate random colors for consistency
   const projectColors = Array(projects.length).fill(null).map(() => getRandomPastelColor());
 
-  const handleProjectClick = (project: Project) => (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleProjectClick = (project: Project, color: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    openModal(project, event);
+    openModal(project, event, color);
   };
 
   return (
@@ -220,7 +216,7 @@ export default function Home({ initialProjects }: HomeProps) {
                   projectRefs.current[index] = el;
                 }}
                 project={project}
-                onClick={handleProjectClick(project)}
+                onClick={handleProjectClick(project, projectColors[index])}
                 backgroundColor={projectColors[index]}
               />
             ))}
@@ -255,6 +251,7 @@ export default function Home({ initialProjects }: HomeProps) {
           modalRef={modalCardRef}
           contentVisible={modalContent}
           isClosing={isClosing}
+          backgroundColor={selectedProjectColor}
         />
       )}
     </>
