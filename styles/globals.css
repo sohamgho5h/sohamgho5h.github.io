@@ -463,11 +463,6 @@ body {
   background: rgba(255, 255, 255, 1);
 }
 
-/* Lock body scroll when modal is open */
-body.modal-open {
-  overflow: hidden;
-}
-
 /* Responsive Design */
 @media (max-width: var(--breakpoint-mobile)) {
   .profile-section {

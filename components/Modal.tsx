@@ -24,22 +24,18 @@ export default function Modal({
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.classList.add('modal-open');
       
-      // Mount content after modal is open
       const timer = setTimeout(() => {
         setIsContentMounted(true);
       }, 50);
 
-      return () => clearTimeout(timer);
-    } else {
-      document.body.classList.remove('modal-open');
-      setIsContentMounted(false);
+      return () => {
+        clearTimeout(timer);
+      };
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.classList.remove('modal-open');
     };
   }, [isOpen]);
 
