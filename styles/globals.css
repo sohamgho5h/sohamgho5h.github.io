@@ -632,4 +632,81 @@ button:focus {
 #__next {
   position: relative;
   z-index: 1;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  background: #fff8ed;
+  color: #2d4a43;
+  padding: 0.6rem 1.1rem;
+  border-radius: 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(44, 74, 67, 0.04);
+  border: 1.5px solid #e6dbc7;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s, border 0.18s;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  will-change: transform, opacity;
+}
+
+.cta-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--transition-normal) ease-out, 
+              transform var(--transition-slow) cubic-bezier(0.25, 0.1, 0.25, 1.5);
+}
+
+.cta-btn:hover, .cta-btn:focus {
+  background: #f5e6ce;
+  color: #1e322d;
+  border: 1.5px solid #d6c3a3;
+  box-shadow: 0 4px 16px rgba(44, 74, 67, 0.08);
+  text-decoration: none;
+}
+
+.cta-icon {
+  margin-right: 0.5em;
+  font-size: 1.1em;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .cta-buttons {
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .cta-btn {
+    font-size: 0.98rem;
+    padding: 0.55rem 0.7rem;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+  }
+}
+
+.marquee-logo {
+  position: relative;
+  width: 120px;
+  height: 60px;
+  margin-right: 40px;
+  flex-shrink: 0;
+}
+
+.Marquee {
+  padding: 0 12px;
 } 

@@ -9,6 +9,8 @@ import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LIN
 import { getRandomPastelColor } from '../utils/helpers';
 import { GetStaticProps } from 'next';
 import Marquee from 'react-fast-marquee';
+// FontAwesome imports
+import { FaLinkedin, FaEnvelope, FaDownload, FaFile } from 'react-icons/fa';
 
 interface HomeProps {
   initialProjects: Project[];
@@ -41,6 +43,7 @@ export default function Home({ initialProjects }: HomeProps) {
   const [projects] = useState<Project[]>(initialProjects);
   const projectRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const logoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ctaRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const modalCardRef = useRef<HTMLDivElement>(null);
 
@@ -55,7 +58,7 @@ export default function Home({ initialProjects }: HomeProps) {
       return;
     }
 
-    const allElements = [...logoRefs.current, ...projectRefs.current];
+    const allElements = [...logoRefs.current, ...projectRefs.current, ...ctaRefs.current];
     allElements.forEach((el, index) => {
       if (el) {
         const delay = index === 0 ? INITIAL_DELAY : STAGGER_DELAY * index;
@@ -163,7 +166,8 @@ export default function Home({ initialProjects }: HomeProps) {
                 {companies.map((company, index) => (
                   <div
                     key={company.name}
-                    style={{ position: 'relative', width: '120px', height: '60px', marginRight: 48 }}
+                    className="marquee-logo"
+                    style={{ position: 'relative', width: '120px', height: '60px' }}
                   >
                     <Image
                       src={company.logo}
@@ -175,6 +179,33 @@ export default function Home({ initialProjects }: HomeProps) {
                   </div>
                 ))}
               </Marquee>
+              <div className="cta-buttons">
+                <a
+                  href="https://www.linkedin.com/in/sohamgho5h/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-btn"
+                  ref={el => { ctaRefs.current[0] = el; }}
+                >
+                  <FaLinkedin className="cta-icon" /> Connect
+                </a>
+                <a
+                  href="mailto:sohamghosh@email.com"
+                  className="cta-btn"
+                  ref={el => { ctaRefs.current[1] = el; }}
+                >
+                  <FaEnvelope className="cta-icon" /> Email
+                </a>
+                <a
+                  href="/SohamGhoshCV.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta-btn"
+                  ref={el => { ctaRefs.current[2] = el; }}
+                >
+                  <FaFile className="cta-icon" /> Get CV
+                </a>
+              </div>
             </div>
           </div>
         </section>
