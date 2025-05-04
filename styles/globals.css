@@ -119,55 +119,77 @@ body {
 /* Company Logos */
 .company-logos {
   text-align: center;
+  overflow: hidden;
+  position: relative;
 }
 
-.company-logos p {
+.company-logos h2 {
   margin-bottom: var(--spacing-md);
-  font-style: italic;
   opacity: 0;
   animation: fadeUpIn var(--transition-normal) ease-out 0.12s forwards;
 }
 
-.logo-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-xs);
-  align-items: center;
-  justify-items: center;
-  max-width: 600px;
-  margin: 0 auto;
+.logo-scroll-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
-.logo-grid > div {
+.logo-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 0;
+  animation: scroll 30s linear infinite;
+  will-change: transform;
+}
+
+.logo-scroll > div {
   position: relative;
   width: 120px;
   height: 60px;
   opacity: 0;
   transform: translateY(20px);
   will-change: transform, opacity;
+  flex-shrink: 0;
+  margin-right: 48px; /* spacing between logos, matches previous gap */
 }
 
-.logo-grid > div.visible {
+.logo-scroll > div:last-child {
+  margin-right: 0;
+}
+
+.logo-scroll > div.visible {
   opacity: 1;
   transform: translateY(0);
   transition: opacity var(--transition-normal) ease-out, 
               transform var(--transition-slow) cubic-bezier(0.25, 0.1, 0.25, 1.5);
 }
 
-.logo-grid > div.visible:hover {
+.logo-scroll > div.visible:hover {
   transform: scale(1.1);
   transition: transform var(--transition-normal) cubic-bezier(0.2, 1.5, 0.3, 1.2);
 }
 
-.logo-grid img {
+.logo-scroll img {
   max-width: 120px;
   height: auto;
   opacity: 0.8;
   transition: opacity var(--transition-fast) ease;
 }
 
-.logo-grid img:hover {
+.logo-scroll img:hover {
   opacity: 1;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 /* Projects Section */
@@ -484,11 +506,13 @@ body {
     margin-top: var(--spacing-md);
   }
 
-  .logo-grid {
-    gap: var(--spacing-xs);
+  .logo-scroll > div {
+    width: 100px;
+    height: 50px;
+    margin-right: 32px;
   }
   
-  .logo-grid img {
+  .logo-scroll img {
     max-width: 100px;
   }
 }
@@ -507,24 +531,15 @@ body {
 
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  .logo-grid > div,
-  .project-card,
-  .profile-image,
-  .profile-name,
-  .hero p,
-  .company-logos p,
-  .projects-heading {
-    opacity: 1;
-    transform: none;
+  .logo-scroll {
     animation: none;
   }
-
-  .logo-grid > div.visible,
-  .project-card.visible {
+  .logo-scroll > div {
+    opacity: 1;
     transform: none;
   }
-
-  .project-card.visible:hover {
+  .logo-scroll > div.visible {
+    opacity: 1;
     transform: none;
   }
 }

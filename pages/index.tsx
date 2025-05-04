@@ -8,6 +8,7 @@ import type { Project } from '../types/project';
 import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LINKS } from '../config/constants';
 import { getRandomPastelColor } from '../utils/helpers';
 import { GetStaticProps } from 'next';
+import Marquee from 'react-fast-marquee';
 
 interface HomeProps {
   initialProjects: Project[];
@@ -157,15 +158,12 @@ export default function Home({ initialProjects }: HomeProps) {
           <div>
             <p>AI Product Manager working on Autonomous Agents</p>
             <div className="company-logos">
-              <p>with learnings from</p>
-              <div className="logo-grid">
+              <h2 className="projects-heading">Experience</h2>
+              <Marquee gradient={false} speed={40} pauseOnHover={true}>
                 {companies.map((company, index) => (
-                  <div 
-                    key={company.name} 
-                    ref={el => {
-                      logoRefs.current[index] = el;
-                    }}
-                    style={{ position: 'relative', width: '120px', height: '60px' }}
+                  <div
+                    key={company.name}
+                    style={{ position: 'relative', width: '120px', height: '60px', marginRight: 48 }}
                   >
                     <Image
                       src={company.logo}
@@ -176,7 +174,7 @@ export default function Home({ initialProjects }: HomeProps) {
                     />
                   </div>
                 ))}
-              </div>
+              </Marquee>
             </div>
           </div>
         </section>
