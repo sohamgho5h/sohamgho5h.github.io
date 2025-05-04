@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { LinkedInIcon, GitHubIcon, XIcon } from '../components/icons/SocialIcons';
 import Modal from '../components/Modal';
 import ProjectCard from '../components/ProjectCard';
 import { getAllProjects } from '../utils/projects';
@@ -9,8 +8,8 @@ import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LIN
 import { getRandomPastelColor } from '../utils/helpers';
 import { GetStaticProps } from 'next';
 import Marquee from 'react-fast-marquee';
-// FontAwesome imports
-import { FaLinkedin, FaEnvelope, FaDownload, FaFile } from 'react-icons/fa';
+import { FaLinkedin, FaEnvelope, FaDownload, FaFile, FaInstagram } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 
 interface HomeProps {
   initialProjects: Project[];
@@ -239,9 +238,7 @@ export default function Home({ initialProjects }: HomeProps) {
                   rel="noopener noreferrer"
                   aria-label={`${name} Profile`}
                 >
-                  {Icon === 'LinkedInIcon' && <LinkedInIcon />}
-                  {Icon === 'GitHubIcon' && <GitHubIcon />}
-                  {Icon === 'XIcon' && <XIcon />}
+                  <Icon />
                 </a>
               </li>
             ))}

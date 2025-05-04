@@ -1,3 +1,6 @@
+import { FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+
 export const companies = [
   { name: 'Microsoft', logo: '/images/companies/microsoft.png' },
   { name: 'Salesforce', logo: '/images/companies/salesforce.svg' },
@@ -15,16 +18,16 @@ export const SOCIAL_LINKS = [
   {
     name: 'LinkedIn',
     url: 'https://linkedin.com',
-    Icon: 'LinkedInIcon'
+    Icon: FaLinkedin
   },
   {
-    name: 'GitHub',
-    url: 'https://github.com',
-    Icon: 'GitHubIcon'
+    name: 'Instagram',
+    url: 'https://instagram.com/sohamgho5h',
+    Icon: FaInstagram
   },
   {
     name: 'X',
     url: 'https://x.com',
-    Icon: 'XIcon'
+    Icon: FaXTwitter
   }
 ]; 
