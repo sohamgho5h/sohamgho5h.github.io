@@ -201,7 +201,7 @@ body {
 .projects-heading {
   text-align: center;
   font-size: 1rem;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
   font-weight: 700;
   opacity: 0;
   animation: fadeUpIn var(--transition-normal) ease-out 0.16s forwards;
@@ -650,7 +650,7 @@ button:focus {
   display: flex;
   justify-content: center;
   gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: var(--spacing-lg);
   flex-wrap: wrap;
 }
 
