@@ -113,6 +113,57 @@ const getCurvedPathKeyframes = (start, end) => {
   `;
 };
 
+function useTypingHint() {
+  const [show, setShow] = useState(false);
+  const [typed, setTyped] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+  const fullText = isMobile ? '(Try tapping on the flying objects)' : '(Try clicking on the flying objects)';
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 600);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    let timeoutId;
+    let intervalId;
+    let eraseTimeoutId;
+    let typing = false;
+    function startTyping() {
+      setShow(true);
+      setTyped('');
+      typing = true;
+      let i = 0;
+      intervalId = setInterval(() => {
+        setTyped(fullText.slice(0, i + 1));
+        i++;
+        if (i === fullText.length) {
+          clearInterval(intervalId);
+          typing = false;
+          // Stay for 10s, then erase
+          eraseTimeoutId = setTimeout(() => {
+            setShow(false);
+            setTyped('');
+            // Wait 15s, then start again
+            timeoutId = setTimeout(startTyping, 15000);
+          }, 10000);
+        }
+      }, 28);
+    }
+    startTyping();
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+      clearTimeout(eraseTimeoutId);
+    };
+    // eslint-disable-next-line
+  }, [isMobile]);
+
+  return show ? typed : '';
+}
+
 export default function Home({ initialProjects }: HomeProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
@@ -140,6 +191,7 @@ export default function Home({ initialProjects }: HomeProps) {
   const flyingIconRef = useRef(null);
   const [explosionText, setExplosionText] = useState(null);
   const [explosionTextOffset, setExplosionTextOffset] = useState({ x: 0, y: 0 });
+  const typingHint = useTypingHint();
 
   // Pre-generate colors for consistency, one per project (stable)
   const projectColors = useMemo(() => {
@@ -449,7 +501,36 @@ export default function Home({ initialProjects }: HomeProps) {
             <span className="profile-name">Soham Ghosh</span>
           </div>
           <div>
-            <p>AI Product Manager working on Autonomous Agents</p>
+            <div style={{
+              minHeight: '1.7em',
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+            }}>
+              {typingHint && (
+                <div style={{
+                  fontFamily: 'Nunito, sans-serif',
+                  fontSize: '0.75rem',
+                  color: '#888',
+                  letterSpacing: '0.01em',
+                  fontWeight: 500,
+                  whiteSpace: 'pre',
+                  transition: 'opacity 0.3s',
+                  opacity: typingHint ? 1 : 0,
+                }}>
+                  {typingHint}
+                  <span style={{
+                    display: 'inline-block',
+                    width: '1ch',
+                    background: 'currentColor',
+                    opacity: 0.5,
+                    marginLeft: '2px',
+                    animation: 'blink-cursor 1s steps(2, start) infinite',
+                  }}>&nbsp;</span>
+                </div>
+              )}
+            </div>
+            <p style={{ marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>AI Product Manager working on Autonomous Agents</p>
             <div className="company-logos">
               <h2 className="projects-heading">Experience</h2>
               <Marquee gradient={false} speed={40} pauseOnHover={true}>
@@ -549,6 +630,13 @@ export default function Home({ initialProjects }: HomeProps) {
           backgroundColor={projectColors[selectedProject.id]}
         />
       )}
+
+      <style>{`
+        @keyframes blink-cursor {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 0; }
+        }
+      `}</style>
     </>
   );
 } 
