@@ -138,6 +138,8 @@ export default function Home({ initialProjects }: HomeProps) {
   const [isBurst, setIsBurst] = useState(false);
   const [burstPosition, setBurstPosition] = useState({ left: 0, top: 0 });
   const flyingIconRef = useRef(null);
+  const [explosionText, setExplosionText] = useState(null);
+  const [explosionTextOffset, setExplosionTextOffset] = useState({ x: 0, y: 0 });
 
   // Pre-generate colors for consistency, one per project (stable)
   const projectColors = useMemo(() => {
@@ -289,11 +291,23 @@ export default function Home({ initialProjects }: HomeProps) {
       const rect = iconEl.getBoundingClientRect();
       setBurstPosition({ left: rect.left, top: rect.top });
     }
+    // 60% chance to show explosion text
+    if (Math.random() < 0.6) {
+      setExplosionText(Math.random() < 0.5 ? 'BOOM!' : 'KABOOM!');
+      // Random offset around the explosion (between -30 and +30 px)
+      setExplosionTextOffset({
+        x: Math.floor(Math.random() * 60) - 30,
+        y: Math.floor(Math.random() * 60) - 30,
+      });
+    } else {
+      setExplosionText(null);
+    }
     setIsBurst(true);
     setTimeout(() => {
       setShowFlyingIcon(false); // hide burst
       setTimeout(() => {
         setIsBurst(false);
+        setExplosionText(null);
         setFlyingIconIdx(getRandomInt(0, flyingIcons.length - 1));
         setFlyingColor(flyingColors[getRandomInt(0, flyingColors.length - 1)]);
         setFlyingSize(getRandomInt(18, 32));
@@ -353,6 +367,27 @@ export default function Home({ initialProjects }: HomeProps) {
                 <div style={{
                   position: 'absolute', left: 40, top: 4, width: 12, height: 12, borderRadius: '50%', background: '#bbb', opacity: 0.4, animation: 'smoke2 0.4s ease-out forwards',
                 }} />
+                {/* Explosion text */}
+                {explosionText && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      left: 40 + explosionTextOffset.x,
+                      top: 40 + explosionTextOffset.y,
+                      fontFamily: 'Nunito, sans-serif',
+                      fontWeight: 700,
+                      fontSize: 14,
+                      color: '#111',
+                      textShadow: '0 1px 4px #fff, 0 0px 8px #FFD600',
+                      opacity: 0.85,
+                      pointerEvents: 'none',
+                      animation: 'boom-fade 0.32s cubic-bezier(0.4,1.6,0.6,1) forwards',
+                      userSelect: 'none',
+                    }}
+                  >
+                    {explosionText}
+                  </span>
+                )}
                 <style>{`
                   @keyframes burst-expand {
                     0% { transform: scale(0.5); opacity: 1; }
@@ -374,6 +409,11 @@ export default function Home({ initialProjects }: HomeProps) {
                   @keyframes smoke2 {
                     0% { transform: scale(0.7) translateY(0); opacity: 0.4; }
                     100% { transform: scale(1.1) translateY(-14px); opacity: 0; }
+                  }
+                  @keyframes boom-fade {
+                    0% { opacity: 0; transform: scale(0.7) translateY(0); }
+                    60% { opacity: 1; transform: scale(1.1) translateY(-6px); }
+                    100% { opacity: 0; transform: scale(1.2) translateY(-12px); }
                   }
                 `}</style>
               </div>
