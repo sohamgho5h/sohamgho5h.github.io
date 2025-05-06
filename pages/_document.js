@@ -5,6 +5,21 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <title>Soham Ghosh - AI Product Manager</title>
+        {/* Google Analytics */}
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=G-P1WBRZCMBW`}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-P1WBRZCMBW');
+            `,
+          }}
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap"
           rel="stylesheet"
