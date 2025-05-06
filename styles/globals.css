@@ -760,6 +760,11 @@ button:focus {
   opacity: 0.7;
   animation: fly-across 7s linear infinite;
   z-index: 1;
+  cursor: pointer;
+}
+
+.flying-object:active {
+  cursor: pointer;
 }
 
 @keyframes fly-across {
