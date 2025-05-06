@@ -223,6 +223,8 @@ export default function Home({ initialProjects }: HomeProps) {
   const [explosionTextOffset, setExplosionTextOffset] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
   const [lastScoreTime, setLastScoreTime] = useState(Date.now());
+  const [scoreFlash, setScoreFlash] = useState(null);
+  const [scoreFlashAnim, setScoreFlashAnim] = useState(false);
   const typingHintState = useTypingHintOrScore(score, lastScoreTime);
 
   // Pre-generate colors for consistency, one per project (stable)
@@ -387,11 +389,20 @@ export default function Home({ initialProjects }: HomeProps) {
       setExplosionText(null);
     }
     setIsBurst(true);
-    // Update score
+    // Update score and flash message if needed
     setScore(prev => {
       const newScore = prev + 1;
       setLastScoreTime(Date.now());
       typingHintState.triggerScoreAnim();
+      if (newScore % 5 === 0) {
+        const flashMessages = ['NOICE', 'COOL', 'AWESOME'];
+        setScoreFlash(flashMessages[(newScore / 5 - 1) % flashMessages.length]);
+        setScoreFlashAnim(true);
+        setTimeout(() => {
+          setScoreFlashAnim(false);
+          setTimeout(() => setScoreFlash(null), 350);
+        }, 700);
+      }
       return newScore;
     });
     setTimeout(() => {
@@ -545,8 +556,30 @@ export default function Home({ initialProjects }: HomeProps) {
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',
+              position: 'relative',
             }}>
-              {typingHintState.showScore ? (
+              {scoreFlash ? (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    top: '50%',
+                    transform: `translate(-50%, -60%) scale(${scoreFlashAnim ? 1.18 : 1})`,
+                    fontFamily: 'Nunito, sans-serif',
+                    fontSize: '1.1rem',
+                    color: '#FF6F00',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    opacity: scoreFlashAnim ? 1 : 0,
+                    pointerEvents: 'none',
+                    transition: 'opacity 0.3s, transform 0.3s',
+                    zIndex: 2,
+                    textShadow: '0 1px 4px #fff, 0 0px 8px #FFD600',
+                  }}
+                >
+                  {scoreFlash}
+                </div>
+              ) : typingHintState.showScore ? (
                 <div
                   style={{
                     fontFamily: 'Nunito, sans-serif',
