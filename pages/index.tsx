@@ -8,7 +8,7 @@ import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LIN
 import { getPastelColorByIndex } from '../utils/colors';
 import { GetStaticProps } from 'next';
 import Marquee from 'react-fast-marquee';
-import { FaLinkedin, FaEnvelope, FaFile, FaRocket, FaFeather, FaRobot } from 'react-icons/fa';
+import { FaLinkedin, FaEnvelope, FaFile, FaRocket, FaFeather, FaRobot, FaBomb } from 'react-icons/fa';
 import { FaGhost, FaBluesky, FaRegPaperPlane, FaMosquito, FaSpaghettiMonsterFlying, FaSkull } from 'react-icons/fa6';
 
 interface HomeProps {
@@ -135,6 +135,9 @@ export default function Home({ initialProjects }: HomeProps) {
   const [flyingAngle, setFlyingAngle] = useState(0);
   const [flyingKey, setFlyingKey] = useState(0);
   const [showFlyingIcon, setShowFlyingIcon] = useState(true);
+  const [isBurst, setIsBurst] = useState(false);
+  const [burstPosition, setBurstPosition] = useState({ left: 0, top: 0 });
+  const flyingIconRef = useRef(null);
 
   // Pre-generate colors for consistency, one per project (stable)
   const projectColors = useMemo(() => {
@@ -203,6 +206,7 @@ export default function Home({ initialProjects }: HomeProps) {
     const handleAnimationEnd = () => {
       setShowFlyingIcon(false);
       timeoutId = setTimeout(() => {
+        setIsBurst(false);
         setFlyingIconIdx(getRandomInt(0, flyingIcons.length - 1));
         setFlyingColor(flyingColors[getRandomInt(0, flyingColors.length - 1)]);
         setFlyingSize(getRandomInt(18, 32));
@@ -275,17 +279,118 @@ export default function Home({ initialProjects }: HomeProps) {
     openModal(project, event, color);
   };
 
+  // Flying icon click handler for burst effect
+  const handleFlyingIconClick = (e) => {
+    console.log('Flying icon clicked!');
+    if (isBurst) return;
+    // Get the position of the actual flying icon element
+    const iconEl = document.querySelector('.flying-object');
+    if (iconEl) {
+      const rect = iconEl.getBoundingClientRect();
+      setBurstPosition({ left: rect.left, top: rect.top });
+    }
+    setIsBurst(true);
+    setTimeout(() => {
+      setShowFlyingIcon(false); // hide burst
+      setTimeout(() => {
+        setIsBurst(false);
+        setFlyingIconIdx(getRandomInt(0, flyingIcons.length - 1));
+        setFlyingColor(flyingColors[getRandomInt(0, flyingColors.length - 1)]);
+        setFlyingSize(getRandomInt(18, 32));
+        const newStart = getRandomEdgeAndPosition();
+        const newEnd = getRandomDifferentEdge(newStart.edge);
+        setFlyingStart(newStart);
+        setFlyingEnd(newEnd);
+        setFlyingAngle(getAngle(newStart, newEnd));
+        setFlyingKey(prev => prev + 1);
+        setShowFlyingIcon(true);
+      }, getRandomInt(500, 1500));
+    }, 400); // Show burst for 400ms
+  };
+
   return (
     <>
       <main className="container">
         {/* Fun animated flying icon in the background */}
         <div className="flying-object-bg">
           {showFlyingIcon && (
-            <FlyingIcon
-              key={flyingKey}
-              className="flying-object"
-              style={{ color: flyingColor, fontSize: flyingSize, animation: `${flyingAnimationName} 7s linear 1`, transform: `rotate(${flyingAngle}deg)` }}
-            />
+            isBurst ? (
+              (() => { console.log('Rendering burst'); return null; })() ||
+              <div
+                style={{
+                  position: 'fixed',
+                  left: burstPosition.left,
+                  top: burstPosition.top,
+                  width: 80,
+                  height: 80,
+                  pointerEvents: 'none',
+                  zIndex: 10,
+                }}
+              >
+                {/* Main burst */}
+                <div style={{
+                  position: 'absolute',
+                  left: 20,
+                  top: 20,
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, #FFD600 60%, #FF9100 100%)',
+                  opacity: 0.85,
+                  animation: 'burst-expand 0.4s ease-out forwards',
+                }} />
+                {/* Flames */}
+                <div style={{
+                  position: 'absolute', left: 10, top: 30, width: 18, height: 18, borderRadius: '50%', background: '#FF9100', opacity: 0.7, animation: 'flame1 0.4s ease-out forwards',
+                }} />
+                <div style={{
+                  position: 'absolute', left: 52, top: 28, width: 14, height: 14, borderRadius: '50%', background: '#FF6F00', opacity: 0.6, animation: 'flame2 0.4s ease-out forwards',
+                }} />
+                {/* Smoke */}
+                <div style={{
+                  position: 'absolute', left: 28, top: 0, width: 16, height: 16, borderRadius: '50%', background: '#eee', opacity: 0.5, animation: 'smoke1 0.4s ease-out forwards',
+                }} />
+                <div style={{
+                  position: 'absolute', left: 40, top: 4, width: 12, height: 12, borderRadius: '50%', background: '#bbb', opacity: 0.4, animation: 'smoke2 0.4s ease-out forwards',
+                }} />
+                <style>{`
+                  @keyframes burst-expand {
+                    0% { transform: scale(0.5); opacity: 1; }
+                    80% { transform: scale(1.2); opacity: 0.9; }
+                    100% { transform: scale(1.6); opacity: 0; }
+                  }
+                  @keyframes flame1 {
+                    0% { transform: scale(0.5); opacity: 0.7; }
+                    100% { transform: scale(1.5) translateY(10px); opacity: 0; }
+                  }
+                  @keyframes flame2 {
+                    0% { transform: scale(0.5); opacity: 0.6; }
+                    100% { transform: scale(1.3) translateY(8px); opacity: 0; }
+                  }
+                  @keyframes smoke1 {
+                    0% { transform: scale(0.7) translateY(0); opacity: 0.5; }
+                    100% { transform: scale(1.2) translateY(-18px); opacity: 0; }
+                  }
+                  @keyframes smoke2 {
+                    0% { transform: scale(0.7) translateY(0); opacity: 0.4; }
+                    100% { transform: scale(1.1) translateY(-14px); opacity: 0; }
+                  }
+                `}</style>
+              </div>
+            ) : (
+              (() => { console.log('Rendering flying icon'); return null; })() ||
+              <span
+                ref={flyingIconRef}
+                onClick={handleFlyingIconClick}
+                style={{ position: 'absolute', left: 0, top: 0, width: 'auto', height: 'auto', display: 'inline-block' }}
+              >
+                <FlyingIcon
+                  key={flyingKey}
+                  className="flying-object"
+                  style={{ color: flyingColor, fontSize: flyingSize, animation: `${flyingAnimationName} 7s linear 1`, transform: `rotate(${flyingAngle}deg)` }}
+                />
+              </span>
+            )
           )}
         </div>
 
