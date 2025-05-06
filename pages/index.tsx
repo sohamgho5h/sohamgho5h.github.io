@@ -113,10 +113,12 @@ const getCurvedPathKeyframes = (start, end) => {
   `;
 };
 
-function useTypingHint() {
+function useTypingHintOrScore(score, lastScoreTime) {
   const [show, setShow] = useState(false);
   const [typed, setTyped] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [showScore, setShowScore] = useState(false);
+  const [scoreAnim, setScoreAnim] = useState(false);
   const fullText = isMobile ? '(Try tapping on the flying objects)' : '(Try clicking on the flying objects)';
 
   useEffect(() => {
@@ -126,7 +128,24 @@ function useTypingHint() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Show score if recent, else show typing hint
   useEffect(() => {
+    let timeoutId;
+    if (score > 0) {
+      setShowScore(true);
+      setShow(false);
+      // Hide score and show hint after 20s of inactivity
+      timeoutId = setTimeout(() => {
+        setShowScore(false);
+        setShow(true);
+      }, 20000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [score, lastScoreTime]);
+
+  // Typing animation for hint
+  useEffect(() => {
+    if (showScore) return;
     let timeoutId;
     let intervalId;
     let eraseTimeoutId;
@@ -152,16 +171,27 @@ function useTypingHint() {
         }
       }, 28);
     }
-    startTyping();
+    if (!showScore) startTyping();
     return () => {
       clearInterval(intervalId);
       clearTimeout(timeoutId);
       clearTimeout(eraseTimeoutId);
     };
     // eslint-disable-next-line
-  }, [isMobile]);
+  }, [isMobile, showScore]);
 
-  return show ? typed : '';
+  // Score animation
+  const triggerScoreAnim = () => {
+    setScoreAnim(true);
+    setTimeout(() => setScoreAnim(false), 400);
+  };
+
+  return {
+    typingHint: show ? typed : '',
+    showScore,
+    scoreAnim,
+    triggerScoreAnim,
+  };
 }
 
 export default function Home({ initialProjects }: HomeProps) {
@@ -191,7 +221,9 @@ export default function Home({ initialProjects }: HomeProps) {
   const flyingIconRef = useRef(null);
   const [explosionText, setExplosionText] = useState(null);
   const [explosionTextOffset, setExplosionTextOffset] = useState({ x: 0, y: 0 });
-  const typingHint = useTypingHint();
+  const [score, setScore] = useState(0);
+  const [lastScoreTime, setLastScoreTime] = useState(Date.now());
+  const typingHintState = useTypingHintOrScore(score, lastScoreTime);
 
   // Pre-generate colors for consistency, one per project (stable)
   const projectColors = useMemo(() => {
@@ -355,6 +387,13 @@ export default function Home({ initialProjects }: HomeProps) {
       setExplosionText(null);
     }
     setIsBurst(true);
+    // Update score
+    setScore(prev => {
+      const newScore = prev + 1;
+      setLastScoreTime(Date.now());
+      typingHintState.triggerScoreAnim();
+      return newScore;
+    });
     setTimeout(() => {
       setShowFlyingIcon(false); // hide burst
       setTimeout(() => {
@@ -507,7 +546,27 @@ export default function Home({ initialProjects }: HomeProps) {
               alignItems: 'flex-end',
               justifyContent: 'center',
             }}>
-              {typingHint && (
+              {typingHintState.showScore ? (
+                <div
+                  style={{
+                    fontFamily: 'Nunito, sans-serif',
+                    fontSize: '1.05rem',
+                    color: '#222',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    transition: 'opacity 0.3s',
+                    opacity: 1,
+                    minWidth: '7ch',
+                    textAlign: 'center',
+                    transform: typingHintState.scoreAnim ? 'scale(1.18)' : 'scale(1)',
+                    transitionProperty: 'opacity, transform',
+                    transitionDuration: '0.3s, 0.3s',
+                    transitionTimingFunction: 'ease, cubic-bezier(0.4,1.6,0.6,1)',
+                  }}
+                >
+                  SCORE {score.toString().padStart(3, '0')}
+                </div>
+              ) : typingHintState.typingHint && (
                 <div style={{
                   fontFamily: 'Nunito, sans-serif',
                   fontSize: '0.75rem',
@@ -516,9 +575,9 @@ export default function Home({ initialProjects }: HomeProps) {
                   fontWeight: 500,
                   whiteSpace: 'pre',
                   transition: 'opacity 0.3s',
-                  opacity: typingHint ? 1 : 0,
+                  opacity: typingHintState.typingHint ? 1 : 0,
                 }}>
-                  {typingHint}
+                  {typingHintState.typingHint}
                   <span style={{
                     display: 'inline-block',
                     width: '1ch',
