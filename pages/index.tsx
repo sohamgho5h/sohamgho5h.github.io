@@ -8,9 +8,8 @@ import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LIN
 import { getPastelColorByIndex } from '../utils/colors';
 import { GetStaticProps } from 'next';
 import Marquee from 'react-fast-marquee';
-import { FaLinkedin, FaEnvelope, FaDownload, FaFile, FaInstagram, FaRocket, FaPlane, FaFeather, FaPaperPlane } from 'react-icons/fa';
-import { FaJetFighter } from 'react-icons/fa6';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaLinkedin, FaEnvelope, FaFile, FaRocket, FaFeather, FaRobot } from 'react-icons/fa';
+import { FaGhost, FaBluesky, FaRegPaperPlane, FaMosquito, FaSpaghettiMonsterFlying, FaSkull } from 'react-icons/fa6';
 
 interface HomeProps {
   initialProjects: Project[];
@@ -34,7 +33,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   }
 };
 
-const flyingIcons = [FaPlane, FaRocket, FaFeather, FaJetFighter, FaPaperPlane];
+const flyingIcons = [FaRocket, FaFeather, FaMosquito, FaGhost, FaBluesky, FaRegPaperPlane, FaRobot, FaSkull, FaSpaghettiMonsterFlying];
 const flyingColors = ['#6c63ff', '#ff6f61', '#00b894', '#fdcb6e', '#00bcd4', '#e17055', '#636e72', '#fd79a8', '#0984e3'];
 
 function getRandomInt(min, max) {
