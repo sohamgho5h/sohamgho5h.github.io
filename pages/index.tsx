@@ -5,7 +5,7 @@ import ProjectCard from '../components/ProjectCard';
 import { getAllProjects } from '../utils/projects';
 import type { Project } from '../types/project';
 import { companies, ANIMATION_DURATION, STAGGER_DELAY, INITIAL_DELAY, SOCIAL_LINKS } from '../config/constants';
-import { getRandomPastelColor } from '../utils/helpers';
+import { getPastelColorByIndex } from '../utils/colors';
 import { GetStaticProps } from 'next';
 import Marquee from 'react-fast-marquee';
 import { FaLinkedin, FaEnvelope, FaDownload, FaFile, FaInstagram, FaRocket, FaPlane, FaFeather, FaPaperPlane } from 'react-icons/fa';
@@ -137,11 +137,11 @@ export default function Home({ initialProjects }: HomeProps) {
   const [flyingKey, setFlyingKey] = useState(0);
   const [showFlyingIcon, setShowFlyingIcon] = useState(true);
 
-  // Pre-generate random colors for consistency, one per project (stable)
+  // Pre-generate colors for consistency, one per project (stable)
   const projectColors = useMemo(() => {
     const colorMap = {};
-    projects.forEach((project) => {
-      colorMap[project.id] = getRandomPastelColor();
+    projects.forEach((project, index) => {
+      colorMap[project.id] = getPastelColorByIndex(index);
     });
     return colorMap;
   }, [projects]);

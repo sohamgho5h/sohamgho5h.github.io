@@ -9,7 +9,7 @@
   justify-content: center;
   font-weight: 600;
   font-size: 1.25rem;
-  border: none;
+  /* border: none; */
   opacity: 0;
   transform: translateY(20px);
   will-change: transform, opacity, box-shadow;

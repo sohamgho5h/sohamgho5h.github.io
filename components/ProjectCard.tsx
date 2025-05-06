@@ -14,7 +14,11 @@ const ProjectCard = forwardRef<HTMLButtonElement, ProjectCardProps>(
         ref={ref}
         className="project-card"
         onClick={onClick}
-        style={{ backgroundColor }}
+        style={{
+          background: `${backgroundColor}66`, // 40% opacity
+          border: `2.5px solid ${backgroundColor}`,
+          boxShadow: `0 4px 24px 0 ${backgroundColor}33`
+        }}
         aria-haspopup="dialog"
       >
         <h3 className="project-title">{project.title}</h3>
