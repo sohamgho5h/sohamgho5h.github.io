@@ -660,7 +660,7 @@ export default function Home({ initialProjects }: HomeProps) {
                   <FaEnvelope className="cta-icon" /> Email
                 </a>
                 <a
-                  href="/SohamGhoshCV.pdf"
+                  href="/Soham Ghosh - AI Product Manager - CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="cta-btn"
