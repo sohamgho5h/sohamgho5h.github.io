@@ -509,10 +509,18 @@ body {
   transition: background-color 0.2s ease;
   z-index: 11000;
   pointer-events: auto;
+  outline: none;
+  box-shadow: none;
 }
 
-.modal-close:hover {
-  background: rgba(255, 255, 255, 1);
+.modal-close:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.modal-close:active {
+  outline: none;
+  box-shadow: none;
 }
 
 /* Responsive Design */
