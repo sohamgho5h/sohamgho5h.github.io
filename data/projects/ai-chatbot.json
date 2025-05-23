@@ -4,7 +4,7 @@
   "title": "Case Processing Agent",
   "shortDescription": "Autonomous AI agent that manages case lifecycle in Microsoft Dynamics 365",
   "tags": ["Microsoft", "Dynamics 365", "AI", "Agent"],
-  "thumbnailImage": "/projects/Copilot.png",
+  "thumbnailImage": "/projects/copilot.png",
   "featured": true,
   "markdownContent": "# AI-Powered Customer Service Chatbot\n\nA sophisticated chatbot solution that transforms customer service operations by leveraging Large Language Models.\n\n## Key Features\n\n- **Natural Language Understanding**: Leverages OpenAI's GPT models for human-like conversations\n- **Context Awareness**: Maintains conversation history for more coherent interactions\n- **Multi-platform Integration**: Seamlessly works across web, mobile, and messaging platforms\n- **Analytics Dashboard**: Real-time insights into customer interactions and satisfaction metrics\n\n## Technical Implementation\n\n- Backend built with FastAPI for high-performance API endpoints\n- Frontend developed in React with TypeScript for type safety\n- Redis for session management and caching\n- Docker containerization for easy deployment\n\n## Impact\n\n- 70% reduction in customer service response time\n- 85% customer satisfaction rate\n- Handles over 1000 concurrent conversations\n\n## Learnings\n\nThis project provided valuable insights into:\n- Large Language Model fine-tuning and prompt engineering\n- Real-time websocket communication\n- Scalable architecture design\n- UX design for conversational interfaces",
   "links": {
