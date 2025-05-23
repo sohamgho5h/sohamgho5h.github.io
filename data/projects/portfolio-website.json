@@ -2,9 +2,9 @@
   "id": "portfolio-website",
   "order": 2,
   "title": "Personal Portfolio Website",
-  "shortDescription": "A modern, responsive portfolio website built with React and TypeScript featuring smooth animations and dynamic content loading",
+  "shortDescription": "A modern, responsive portfolio website built with React and TypeScript",
   "tags": ["React", "TypeScript", "CSS3", "Framer Motion"],
-  "thumbnailImage": "/images/projects/portfolio-thumb.jpg",
+  "thumbnailImage": "/projects/nextjs.png",
   "featured": true,
   "markdownContent": "# Personal Portfolio Website\n\nA modern and interactive portfolio website showcasing my projects and skills.\n\n## Design Philosophy\n\nThe website was built with these core principles in mind:\n- **Minimalist Design**: Clean and focused presentation of content\n- **Smooth Interactions**: Carefully crafted animations enhance the user experience\n- **Responsive Layout**: Seamless experience across all device sizes\n- **Performance**: Optimized loading times and smooth scrolling\n\n## Technical Features\n\n- **React & TypeScript**: For robust and type-safe development\n- **CSS Modules**: For scoped styling and better organization\n- **Framer Motion**: For smooth, physics-based animations\n- **Dynamic Content**: JSON-based project management system\n- **Dark Mode**: System-preference based theme switching\n\n## Performance Metrics\n\n- 98/100 Lighthouse performance score\n- First Contentful Paint: 0.8s\n- Time to Interactive: 1.2s\n\n## Implementation Details\n\nThe project structure emphasizes maintainability and scalability:\n- Component-based architecture\n- Reusable animation components\n- CSS custom properties for theming\n- Optimized asset loading",
   "links": {
