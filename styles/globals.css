@@ -157,13 +157,13 @@ body {
 
 .logo-scroll > div {
   position: relative;
-  width: 120px;
-  height: 60px;
+  width: 72px;
+  height: 36px;
   opacity: 0;
   transform: translateY(20px);
   will-change: transform, opacity;
   flex-shrink: 0;
-  margin-right: 48px; /* spacing between logos, matches previous gap */
+  margin-right: 28.8px;
 }
 
 .logo-scroll > div:last-child {
@@ -183,7 +183,7 @@ body {
 }
 
 .logo-scroll img {
-  max-width: 120px;
+  max-width: 72px;
   height: auto;
   opacity: 0.8;
   transition: opacity var(--transition-fast) ease;
@@ -559,13 +559,13 @@ body {
   }
 
   .logo-scroll > div {
-    width: 100px;
-    height: 50px;
-    margin-right: 32px;
+    width: 60px;
+    height: 30px;
+    margin-right: 19.2px;
   }
   
   .logo-scroll img {
-    max-width: 100px;
+    max-width: 60px;
   }
 }
 

@@ -625,23 +625,31 @@ export default function Home({ initialProjects }: HomeProps) {
             <p style={{ marginTop: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>AI Product Manager working on Autonomous Agents</p>
             <div className="company-logos">
               <h2 className="projects-heading">Experience</h2>
-              <Marquee gradient={false} speed={40} pauseOnHover={true}>
-                {companies.map((company, index) => (
-                  <div
-                    key={company.name}
-                    className="marquee-logo"
-                    style={{ position: 'relative', width: '120px', height: '60px' }}
-                  >
-                    <Image
-                      src={company.logo}
-                      alt={company.name}
-                      fill
-                      style={{ objectFit: 'contain' }}
-                      sizes="120px"
-                    />
-                  </div>
-                ))}
-              </Marquee>
+              <div style={{ width: '400px', margin: '0 auto', marginBottom: '2.6rem' }}>
+                <Marquee
+                  gradient={true}
+                  gradientColor="#fff9e8"
+                  gradientWidth={40}
+                  speed={40}
+                  pauseOnHover={true}
+                >
+                  {[...companies, ...companies].map((company, index) => (
+                    <div
+                      key={company.name + '-' + index}
+                      className="marquee-logo"
+                      style={{ position: 'relative', width: '60px', height: '40px' }}
+                    >
+                      <Image
+                        src={company.logo}
+                        alt={company.name}
+                        fill
+                        style={{ objectFit: 'contain' }}
+                        sizes="60px"
+                      />
+                    </div>
+                  ))}
+                </Marquee>
+              </div>
               <div className="cta-buttons">
                 <a
                   href="https://www.linkedin.com/in/sohamgho5h/"
